@@ -32,7 +32,14 @@ Route::get('/users', function () {
 
 // Route::get('/posts', [PostController::class, 'index']);
 
-Route::apiResource('posts', PostController::class);
-Route::prefix('posts')->group(function () {
+
+// Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
+
+Route::prefix('posts')->middleware('auth:sanctum')->group(function () {
+    Route::apiResource('/', PostController::class);
     Route::post('/{id}/restore', [PostController::class, 'restore']);
+});
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'Register']);
 });

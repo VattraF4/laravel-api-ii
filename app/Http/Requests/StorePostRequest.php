@@ -42,5 +42,5 @@ class StorePostRequest extends FormRequest
             'status.in' => 'Post status must be one of the following: draft, published, archived',
             'body.required' => 'Post body is required',
         ];
-    }
+}
 }
