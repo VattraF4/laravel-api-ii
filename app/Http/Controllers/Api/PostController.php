@@ -24,9 +24,9 @@ class PostController extends Controller
 
         $post = Post::all();
         return response()->json([
-            'status' => true,
-            'posts' => $post,
-            'message' => 'all posts retrieved successfully'
+            'success' => true,
+            'message' => 'all posts retrieved successfully',
+            'data' => $post,
         ], 200);
 
     }
@@ -49,9 +49,9 @@ class PostController extends Controller
         $post = Post::create($request->all());
 
         return response()->json([
-            'post' => $post,
-            'status' => true,
-            'message' => 'Post created successfully'
+            'success' => true,
+            'message' => 'Post created successfully',
+            'data' => $post
         ], 201);
     }
 
@@ -60,12 +60,22 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        // $post = Post::findOrFail($id);
-        // return response()->json([
-        //     'post' => $post,
-        //     'status' => true,
-        //     'message' => 'Post retrieved successfully'
-        // ], 200);
+        try {
+            //code...
+            $post = Post::findOrFail($id);
+            return response()->json([
+                'data' => $post,
+                'success' => true,
+                'message' => 'Post retrieved successfully'
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
     }
 
     /**
@@ -84,13 +94,21 @@ class PostController extends Controller
         ]);
 
         $post = Post::findOrFail($id);
-        $post->update($request->all());
-
-        return response()->json([
-            'status' => true,
-            'post' => $post,
-            'message' => 'Post updated successfully'
-        ]);
+        try {
+            //code...
+            $post->update($request->all());
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated successfully',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
     }
 
     /**
@@ -98,7 +116,15 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        return "Post $id deleted successfully";
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return response()->json([null], 204);
+    }
 
+    public function restore(string $id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore();
+        return response()->json(['message' => 'Post restored successfully'], 200);
     }
 }

@@ -33,3 +33,6 @@ Route::get('/users', function () {
 // Route::get('/posts', [PostController::class, 'index']);
 
 Route::apiResource('posts', PostController::class);
+Route::prefix('posts')->group(function () {
+    Route::post('/{id}/restore', [PostController::class, 'restore']);
+});
