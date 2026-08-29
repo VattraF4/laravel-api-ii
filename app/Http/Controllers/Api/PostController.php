@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post\Post;
 use Illuminate\Http\Request;
 
@@ -34,18 +35,10 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'body' => 'required|string',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image' => 'nullable|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'status' => 'required|in:draft,published,archived',
-        ]);
-
+        //48. Validate the request data from the StorePostRequest class
+        
         $post = Post::create($request->all());
 
         return response()->json([
@@ -60,6 +53,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
+        
         try {
             //code...
             $post = Post::findOrFail($id);
