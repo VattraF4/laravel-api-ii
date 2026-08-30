@@ -38,8 +38,9 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         //48. Validate the request data from the StorePostRequest class
-        
-        $post = Post::create($request->all());
+        $validationUser = $request->validated();
+        $validationUser['user_id'] = auth()->id(); // Add the authenticated user's ID to the validated data
+        $post = Post::create($validationUser);
 
         return response()->json([
             'success' => true,
