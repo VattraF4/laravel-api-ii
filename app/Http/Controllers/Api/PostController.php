@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -23,7 +24,7 @@ class PostController extends Controller
         //     'message' => 'success'
         // ];
 
-        $post = Post::all();
+        $post = Post::with('user:id,name,email')->get();
         return response()->json([
             'success' => true,
             'message' => 'all posts retrieved successfully',
@@ -54,7 +55,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        
+
         try {
             //code...
             $post = Post::findOrFail($id);
