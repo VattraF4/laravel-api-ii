@@ -37,7 +37,7 @@ Route::get('/users', function () {
 // Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 
 Route::prefix('posts')->middleware('auth:sanctum')->group(function () {
-    Route::apiResource('/', PostController::class);
+    Route::apiResource('', PostController::class)->parameter('', 'post');
     Route::post('/{id}/restore', [PostController::class, 'restore']);
 });
 

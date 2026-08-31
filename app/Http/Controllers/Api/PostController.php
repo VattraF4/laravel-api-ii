@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,11 +26,16 @@ class PostController extends Controller
         // ];
 
         $post = Post::with('user:id,name,email')->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'all posts retrieved successfully',
-            'data' => $post,
-        ], 200);
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'all posts retrieved successfully',
+        //     'data' => $post,
+        // ], 200);
+
+        // API Resource
+        return PostResource::collection($post); // multiple posts
+        // return new PostResource($post); // single post
+
 
     }
 
@@ -58,12 +64,15 @@ class PostController extends Controller
 
         try {
             //code...
-            $post = Post::findOrFail($id);
-            return response()->json([
-                'data' => $post,
-                'success' => true,
-                'message' => 'Post retrieved successfully'
-            ], 200);
+            $post = Post::findOrFail($id); // Eager load the user relationship with selected fields
+            // return response()->json([
+            //     'data' => $post,
+            //     'success' => true,
+            //     'message' => 'Post retrieved successfully'
+            // ], 200);
+
+            // API Resource
+            return new PostResource($post); // single post
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
