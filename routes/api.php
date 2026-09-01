@@ -49,3 +49,7 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
+
+Route::prefix('email')->middleware('auth:sanctum')->group(function () {
+    Route::get('/send-welcome-email', [\App\Http\Controllers\Email\EmailController::class, 'sendWelcomeEmail']);
+});
