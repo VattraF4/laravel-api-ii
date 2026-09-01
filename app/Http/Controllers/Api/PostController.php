@@ -25,7 +25,7 @@ class PostController extends Controller
         //     'message' => 'success'
         // ];
 
-        $post = Post::with('user:id,name,email')->get();
+        // $post = Post::with('user:id,name,email')->get();
         // return response()->json([
         //     'success' => true,
         //     'message' => 'all posts retrieved successfully',
@@ -33,11 +33,17 @@ class PostController extends Controller
         // ], 200);
 
         // API Resource
-        return PostResource::collection($post); // multiple posts
+        // $post = Post::with('user:id,name,email')->get();
+        // return PostResource::collection($post); // multiple posts
         // return new PostResource($post); // single post
 
+        // Pagination with API Resource
+        $post = Post::with('user')->where('user_id', 2)->where('status', 'published')->with('user:id,name,email')->Paginate(1);
+        return PostResource::collection($post); // multiple posts with pagination
 
     }
+
+    
 
     /**
      * Store a newly created resource in storage.

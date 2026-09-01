@@ -28,7 +28,10 @@ class PostResource extends JsonResource
             //     'email' => $this->user->email,
             // ],
 
-            'user'=> new UserResource($this ->whenLoaded('user'))
+            'user' => new UserResource($this->whenLoaded('user'))
+            // whenLoaded() method is used to work with eager loading with user table
+            // Example Post::with('user:id,name,email')->get() or Post::with('user:id,name,email')->paginate(10)
+
         ];
     }
 }
