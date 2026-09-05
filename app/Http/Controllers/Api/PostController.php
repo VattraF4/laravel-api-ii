@@ -7,7 +7,9 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post\Post;
 use App\Models\User;
+use App\Notifications\NewPostNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -55,6 +57,11 @@ class PostController extends Controller
         $validationUser['user_id'] = auth()->id(); // Add the authenticated user's ID to the validated data
         $post = Post::create($validationUser);
 
+
+
+        // Notify the user about the new post creation
+        $post->user->notify(new NewPostNotification($post)); // Notify the user about the new post creation
+        
         return response()->json([
             'success' => true,
             'message' => 'Post created successfully',
