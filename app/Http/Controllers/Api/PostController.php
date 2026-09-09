@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
+use App\Jobs\ProcessPost;
 use App\Models\Post\Post;
 use App\Models\User;
 use App\Notifications\NewPostNotification;
@@ -40,12 +41,12 @@ class PostController extends Controller
         // return new PostResource($post); // single post
 
         // Pagination with API Resource
-        $post = Post::with('user')->where('user_id', 2)->where('status', 'published')->with('user:id,name,email')->Paginate(1);
+        $post = Post::with('user')->where('user_id', 2)->where('status', 'published')->with('user:id,name,email')->Paginate(5);
         return PostResource::collection($post); // multiple posts with pagination
 
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -60,8 +61,10 @@ class PostController extends Controller
 
 
         // Notify the user about the new post creation
-        $post->user->notify(new NewPostNotification($post)); // Notify the user about the new post creation
-        
+        // $post->user->notify(new NewPostNotification($post)); // Notify the user about the new post creation
+
+        ProcessPost::dispatch($post); // Dispatch the ProcessPost job to the queue
+
         return response()->json([
             'success' => true,
             'message' => 'Post created successfully',
@@ -144,5 +147,10 @@ class PostController extends Controller
         $post = Post::withTrashed()->findOrFail($id);
         $post->restore();
         return response()->json(['message' => 'Post restored successfully'], 200);
+    }
+
+    public function triggerJob()
+    {
+        ProcessPost::dispatch(); // Dispatch the ProcessPost job to the queue
     }
 }

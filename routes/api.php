@@ -53,3 +53,5 @@ Route::prefix('auth')->group(function () {
 Route::prefix('email')->middleware('auth:sanctum')->group(function () {
     Route::get('/send-welcome-email', [\App\Http\Controllers\Email\EmailController::class, 'sendWelcomeEmail']);
 });
+
+Route::get('/trigger-job', [PostController::class, 'triggerJob']);
