@@ -7,3 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.web.show');
+Route::get('view-componet', function () {
+    return view('using-component');
+});
