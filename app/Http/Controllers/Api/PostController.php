@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Jobs\ProcessPost;
+use App\Jobs\SendEmailsJob;
 use App\Models\Post\Post;
 use App\Models\User;
 use App\Notifications\NewPostNotification;
@@ -63,7 +64,10 @@ class PostController extends Controller
         // Notify the user about the new post creation
         // $post->user->notify(new NewPostNotification($post)); // Notify the user about the new post creation
 
-        ProcessPost::dispatch($post); // Dispatch the ProcessPost job to the queue
+        // ProcessPost::dispatch($post); // Dispatch the ProcessPost job to the queue
+        
+        $userIds = User::pluck('id')->toArray(); // Get all user IDs
+        SendEmailsJob::dispatch($userIds, $post); // Dispatch the SendEmailsJob to the queue
 
         return response()->json([
             'success' => true,
@@ -149,8 +153,9 @@ class PostController extends Controller
         return response()->json(['message' => 'Post restored successfully'], 200);
     }
 
-    public function triggerJob()
+    public function triggerJob(string $id)
     {
-        ProcessPost::dispatch(); // Dispatch the ProcessPost job to the queue
+        $post = Post::findOrFail($id);
+        ProcessPost::dispatch($post); // Dispatch the ProcessPost job to the queue
     }
 }

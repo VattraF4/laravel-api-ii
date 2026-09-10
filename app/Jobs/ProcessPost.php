@@ -1,29 +1,30 @@
 <?php
-
 namespace App\Jobs;
 
+
+use App\Models\Post\Post;
+use App\Notifications\NewPostNotification;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels; 
+use Log;// Critical for Eloquent models
 
 class ProcessPost implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(public $post)
+    public $post;
+
+    public function __construct(Post $post)
     {
         $this->post = $post;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        \Log::info('Post created successfully!'. $this->post->id); // Log a message indicating that the job has been processed
-        
+        Log::info('Processing post: ' . $this->post->id);
+        // $this->post->user->notify(new NewPostNotification($this->post));
     }
 }

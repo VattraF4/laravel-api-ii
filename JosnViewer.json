@@ -1,0 +1,19 @@
+{
+    "uuid": "be2960ab-31ef-4dbd-9896-4ad0582e6ff5",
+    "displayName": "App\\Jobs\\ProcessPost",
+    "job": "Illuminate\\Queue\\CallQueuedHandler@call",
+    "maxTries": null,
+    "maxExceptions": null,
+    "failOnTimeout": false,
+    "backoff": null,
+    "timeout": null,
+    "retryUntil": null,
+    "deleteWhenMissingModels": false,
+    "data": {
+        "commandName": "App\\Jobs\\ProcessPost",
+        "command": "O:20:\"App\\Jobs\\ProcessPost\":1:{s:4:\"post\";O:45:\"Illuminate\\Contracts\\Database\\ModelIdentifier\":5:{s:5:\"class\";s:20:\"App\\Models\\Post\\Post\";s:2:\"id\";i:30;s:9:\"relations\";a:0:{}s:10:\"connection\";s:5:\"mysql\";s:15:\"collectionClass\";N;}}",
+        "batchId": null
+    },
+    "createdAt": 1788926522,
+    "delay": null
+}

@@ -36,9 +36,9 @@ Route::get('/users', function () {
 
 // Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 
-Route::prefix('posts')->middleware('auth:sanctum')->group(function () {
-    Route::apiResource('', PostController::class)->parameter('', 'post');
-    Route::post('/{id}/restore', [PostController::class, 'restore']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('posts', PostController::class);
+    Route::post('posts/{id}/restore', [PostController::class, 'restore']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -54,4 +54,4 @@ Route::prefix('email')->middleware('auth:sanctum')->group(function () {
     Route::get('/send-welcome-email', [\App\Http\Controllers\Email\EmailController::class, 'sendWelcomeEmail']);
 });
 
-Route::get('/trigger-job', [PostController::class, 'triggerJob']);
+Route::get('/posts/{id}/trigger-job', [PostController::class, 'triggerJob']);
