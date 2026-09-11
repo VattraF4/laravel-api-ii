@@ -1,7 +1,11 @@
 <x-layouts.apps title="Laravel-All Post">
     <br>
-    <x-alert :success="$save" error="Something went wrong">
+    <x-alert :success="$save" type="danger" error="Something went wrong">
         Saved successfully!
+    </x-alert>
+<hr>
+    <x-alert :success="$save" error="Error Happened!">
+        Create Post Successfully!
     </x-alert>
 
     @foreach ($posts as $post)
