@@ -1,6 +1,6 @@
 @extends('components.layouts.app')
 @section('content')
-    <x-card">
+    <x-card>
         <x-slot name="header">
             <h5>
                 <i class="fa fa-info-circle"></i> 

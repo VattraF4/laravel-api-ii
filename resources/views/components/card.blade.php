@@ -6,4 +6,8 @@
     <div class="card-body">
         {{$slot}}
     </div>
+    
+    <div class="card-footer">
+        {{$footer}}
+    </div>
 </div>
