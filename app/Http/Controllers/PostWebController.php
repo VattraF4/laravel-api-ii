@@ -13,7 +13,7 @@ class PostWebController extends Controller
     public function index()
     {
         $posts = Post::paginate(3);
-        $save = true;
+        $save = false;
         return view('posts.all', compact('posts', 'save'));
     }
 
