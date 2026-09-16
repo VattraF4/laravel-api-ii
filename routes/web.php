@@ -3,7 +3,10 @@
 use App\Http\Controllers\PostWebController;
 use App\Models\Post\Post;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,21 +37,61 @@ Route::get('/helper', function () {
     // echo "<br> " . str('Hello World')->limit(5)->append(' <b>see more</b>');
 
     $nums = collect([1, 2, 3, 4, 5]);
-    echo $nums->sum()."<br>";
+    echo $nums->sum() . "<br>";
 
     echo $nums->filter(function ($num) {
         return $num > 2;
-    })."<br>";
+    }) . "<br>";
 
     echo $nums->map(function ($num) {
         return $num * 2;
-    })->count()."<br>";
+    })->count() . "<br>";
 
     // User
     $posts = Post::all();
-    echo $posts->pluck('title')."<br><br>";
+    echo $posts->pluck('title') . "<br><br>";
 
     echo $posts->where('status', 'published')->map(function ($post) {
         return $post->title;
     })->implode('<br>');
+});
+
+Route::get('/logs', function (PostWebController $postWebController) {
+    $data = [
+        "title" => "My first post",
+        "subtitle" => "This is the subtitle of my first post",
+        "body" => "This is the content of my first post",
+        "image" => "https://example.com/image.jpg",
+        "status" => "published",
+        "user_id" => 2
+    ];
+
+    Log::info('Request data start:', $data);
+
+    $request = Request::create('/posts-web', 'POST', $data);
+
+    $postWebController->store($request);
+
+    Log::info('Request data end:', $data);
+});
+
+Route::get('/logs-error-handler', function (PostWebController $postWebController) {
+    $data = [
+        "title" => "My first post",
+        "subtitle" => "This is the subtitle of my first post",
+        "body" => "This is the content of my first post",
+        "image" => "https://example.com/image.jpg",
+        "status" => "published",
+        "user_id" => 1
+    ];
+
+    try {
+        //code...
+        $request = Request::create('/posts-web', 'POST', $data);
+
+        $postWebController->store($request);
+    } catch (\Throwable $th) {
+        //throw $th;
+        Log::error('Error occurred while storing post:', ['error' => $th->getMessage(), 'data' => $data]);
+    }
 });

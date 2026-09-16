@@ -30,7 +30,14 @@ class PostWebController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Post::create([
+            "title"=>$request->title,
+            "subtitle"=>$request->subtitle,
+            "body"=>$request->body,
+            "image"=>$request->image,
+            "status"=>$request->status,
+            "user_id"=>$request->user_id,
+        ]);
     }
 
     /**
