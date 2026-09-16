@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostWebController;
+use App\Models\Post\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -21,14 +22,33 @@ Route::resources([
 ]);
 
 Route::get('/helper', function () {
-    $user = User::find(2);
-    echo optional($user)->verified_at; // Optional helper (Laravel 5.5+)
-    $user?->verified_at; // Null safety operator , better than optional helper (PHP 8+)
-    echo "<br>";
+    // $user = User::find(2);
+    // echo optional($user)->verified_at; // Optional helper (Laravel 5.5+)
+    // $user?->verified_at; // Null safety operator , better than optional helper (PHP 8+)
+    // echo "<br>";
 
-    echo str('Laravel Framework')->upper();
-    echo "<br> " . str('Laravel Framework')->slug();
-    echo "<br> " . str('Laravel')->contains('ara'); // true or false , 1 or 0
-    echo "<br> " . str('Hello World')->limit(5);
-    echo "<br> " . str('Hello World')->limit(5)->append(' <b>see more</b>');
+    // echo str('Laravel Framework')->upper();
+    // echo "<br> " . str('Laravel Framework')->slug();
+    // echo "<br> " . str('Laravel')->contains('ara'); // true or false , 1 or 0
+    // echo "<br> " . str('Hello World')->limit(5);
+    // echo "<br> " . str('Hello World')->limit(5)->append(' <b>see more</b>');
+
+    $nums = collect([1, 2, 3, 4, 5]);
+    echo $nums->sum()."<br>";
+
+    echo $nums->filter(function ($num) {
+        return $num > 2;
+    })."<br>";
+
+    echo $nums->map(function ($num) {
+        return $num * 2;
+    })->count()."<br>";
+
+    // User
+    $posts = Post::all();
+    echo $posts->pluck('title')."<br><br>";
+
+    echo $posts->where('status', 'published')->map(function ($post) {
+        return $post->title;
+    })->implode('<br>');
 });
