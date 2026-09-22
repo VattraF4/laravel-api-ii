@@ -95,3 +95,7 @@ Route::get('/logs-error-handler', function (PostWebController $postWebController
         Log::error('Error occurred while storing post:', ['error' => $th->getMessage(), 'data' => $data]);
     }
 });
+
+Route::get('custom',function(){
+    return view('errors.404');
+});
