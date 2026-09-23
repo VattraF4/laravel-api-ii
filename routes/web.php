@@ -96,6 +96,48 @@ Route::get('/logs-error-handler', function (PostWebController $postWebController
     }
 });
 
-Route::get('custom',function(){
+Route::get('custom', function () {
     return view('errors.404');
+});
+
+Route::get('trasaction-db', function () {
+    DB::beginTransaction();
+    $user = User::create([
+        "name" => "Ra Vattra",
+        "email" => "ravattrasmartboy1@gmail.com",
+        "password" => bcrypt("webcoding@gmail.com"),
+    ]);
+
+    $user = User::find(2);
+
+    if (!$user) {
+        DB::rollBack();
+    }
+
+    $user->update(['name' => 'updated']);
+    DB::commit();
+});
+
+Route::get('transaction-db-error', function () {
+    try {
+        DB::beginTransaction();
+        User::create([
+            'name' => 'Ra Vattra',
+            'email' => 'ravattrasmartboy7@gmail.com',
+            'password' => bcrypt('secret123'),
+        ]);
+        $user = User::find(999); // This will return null since the user with ID 999 does not exist
+        if (!$user) {
+            throw new \Exception('User creation failed');
+        }
+
+        $user->update([
+            'name' => 'Updated Name'
+        ]);
+
+        DB::commit();
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        throw $e;
+    }
 });
